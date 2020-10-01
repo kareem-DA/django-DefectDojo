@@ -1893,7 +1893,7 @@ class Finding(models.Model):
         return long_desc
 
     def save(self, dedupe_option=True, false_history=False, rules_option=True,
-             issue_updater_option=True, push_to_jira=False, user=None, *args, **kwargs):
+             issue_updater_option=True, push_to_jira=None, user=None, *args, **kwargs):
         # Make changes to the finding before it's saved to add a CWE template
         new_finding = False
 
@@ -1903,7 +1903,8 @@ class Finding(models.Model):
             logger.debug('finding.save() getting current user: %s', user)
 
         jira_issue_exists = JIRA_Issue.objects.filter(finding=self).exists()
-        push_to_jira = getattr(self, 'push_to_jira', push_to_jira)
+        if not push_to_jira:
+            push_to_jira = getattr(self, 'push_to_jira', False)
 
         if self.pk is None:
             # We enter here during the first call from serializers.py

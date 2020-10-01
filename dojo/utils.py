@@ -1627,7 +1627,7 @@ def update_jira_issue(find, push_to_jira):
             if r.status_code != 204:
                 logger.warn("JIRA transition failed with error: {}".format(r.text))
             find.jira_change = timezone.now()
-            find.save()
+            find.save(push_to_jira=False)
         elif 'Active' in find.status() and 'Verified' in find.status():
             # if 'Inactive' in old_status:
             json_data = {'transition': {'id': jira_conf.open_status_key}}
@@ -1638,7 +1638,7 @@ def update_jira_issue(find, push_to_jira):
             if r.status_code != 204:
                 logger.warn("JIRA transition failed with error: {}".format(r.text))
             find.jira_change = timezone.now()
-            find.save()
+            find.save(push_to_jira=False)
 
 
 def close_epic(eng, push_to_jira):
